@@ -1,6 +1,7 @@
 const shortid = require("shortid");
 const { authCheck } = require("../helpers/authCheck");
 const User = require("../models/user");
+const Hike = require("../models/hike");
 
 const profile = async (parent, args, { req }) => {
   const currentUser = await authCheck(req);
@@ -36,6 +37,27 @@ const userUpdate = async (parent, args, { req }) => {
   return updatedUser;
 };
 
+const userDelete = async (parent, args, { req }) => {
+  // Check the user
+  const currentUser = await authCheck(req);
+
+  // Get the user
+  const currentUserFromDb = await User.findOne({
+    email: currentUser.email,
+  }).exec();
+
+  // Delete the hikes of the user
+
+  await Hike.deleteMany({ postedBy: { _id: currentUserFromDb._id } });
+
+  // Delete the user
+  let deletedUser = await User.findByIdAndDelete({
+    _id: currentUserFromDb._id,
+  }).exec();
+
+  return deletedUser;
+};
+
 module.exports = {
   Query: {
     profile,
@@ -45,5 +67,6 @@ module.exports = {
   Mutation: {
     userCreate,
     userUpdate,
+    userDelete,
   },
 };

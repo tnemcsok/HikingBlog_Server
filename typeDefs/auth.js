@@ -15,6 +15,8 @@ module.exports = gql`
     email: String
     images: [Image]
     about: String
+    age: Int
+    gender: String
     createdAt: DataTime
     updatedAt: DataTime
   }
@@ -35,6 +37,8 @@ module.exports = gql`
     email: String
     images: [ImageInput]
     about: String
+    age: Int
+    gender: String
   }
   type Query {
     profile: User!
@@ -44,5 +48,6 @@ module.exports = gql`
   type Mutation {
     userCreate: UserCreateResponse!
     userUpdate(input: UserUpdateInput): User!
+    userDelete: Hike
   }
 `;
